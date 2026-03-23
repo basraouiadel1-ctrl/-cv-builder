@@ -91,7 +91,10 @@
     }
   </style>
 
+  <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
   <div id="builder">
@@ -116,6 +119,7 @@
       const experience = document.getElementById('experience').value;
       const skills = document.getElementById('skills').value;
 
+      // عرض CV على الموقع
       document.getElementById('cv').innerHTML = `
         <h2>${name}</h2>
         <p><b>Email:</b> ${email}</p>
@@ -130,15 +134,18 @@
         </div>
       `;
 
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.setFontSize(12);
-      doc.text(`Name: ${name}`, 10, 10);
-      doc.text(`Email: ${email}`, 10, 20);
-      doc.text(`Phone: ${phone}`, 10, 30);
-      doc.text(`Experience:\n${experience}`, 10, 40);
-      doc.text(`Skills:\n${skills}`, 10, 80);
-      doc.save(`${name}_CV.pdf`);
+      // تحويل HTML كامل لصورة PDF
+      const cvElement = document.getElementById('cv');
+      html2canvas(cvElement).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'pt', 'a4');
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`${name}_CV.pdf`);
+      });
     }
   </script>
 </body>
