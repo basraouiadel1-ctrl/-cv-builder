@@ -2,101 +2,57 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>CV Builder</title>
+  <title>Professional CV Builder</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #e0f7fa, #e8f5e9);
+      background: #e8f5e9;
       display: flex;
       justify-content: center;
       padding: 50px 20px;
     }
 
     #builder {
-      width: 550px;
+      width: 600px;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
     }
 
     input, textarea {
       display: block;
       width: 100%;
       margin: 12px 0;
-      padding: 14px;
-      border-radius: 10px;
+      padding: 12px;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      font-size: 15px;
-      transition: 0.3s;
-    }
-
-    input:focus, textarea:focus {
-      border-color: #43a047;
-      box-shadow: 0 0 5px rgba(67,160,71,0.5);
-      outline: none;
+      font-size: 14px;
     }
 
     button {
       width: 100%;
-      padding: 16px;
-      font-size: 17px;
+      padding: 14px;
+      font-size: 16px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       background: linear-gradient(90deg, #43a047, #66bb6a);
       color: white;
       cursor: pointer;
       margin-top: 12px;
-      transition: all 0.3s;
     }
 
     button:hover {
       transform: scale(1.03);
       opacity: 0.9;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    #cv {
-      background: white;
-      padding: 30px;
-      margin-top: 25px;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-      border-radius: 15px;
-      line-height: 1.6;
-    }
-
-    h2 {
-      color: #2e7d32;
-      font-size: 26px;
-      margin-bottom: 8px;
-      border-bottom: 3px solid #43a047;
-      padding-bottom: 5px;
-    }
-
-    h3 {
-      color: #43a047;
-      font-size: 20px;
-      margin-top: 18px;
-      margin-bottom: 6px;
-      border-bottom: 1.5px solid #a5d6a7;
-      padding-bottom: 4px;
-    }
-
-    p {
-      margin: 6px 0;
-    }
-
-    .section {
-      margin-top: 15px;
-      padding: 15px;
-      background: #f1f8e9;
-      border-radius: 10px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
     }
   </style>
 
-  <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <div id="builder">
-    <h1 style="text-align:center; color:#2e7d32;">CV Builder</h1>
+    <h1 style="text-align:center; color:#2e7d32;">Professional CV Builder</h1>
 
     <input type="text" id="name" placeholder="Your Name">
     <input type="email" id="email" placeholder="Your Email">
@@ -105,72 +61,57 @@
     <textarea id="skills" placeholder="Your Skills"></textarea>
 
     <button onclick="generatePDF()">Generate & Download PDF</button>
-
-    <div id="cv"></div>
   </div>
 
   <script>
     function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
       const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
       const experience = document.getElementById('experience').value;
       const skills = document.getElementById('skills').value;
 
-      // عرض CV على الموقع
-      document.getElementById('cv').innerHTML = `
-        <h2>${name}</h2>
-        <p><b>Email:</b> ${email}</p>
-        <p><b>Phone:</b> ${phone}</p>
-        <div class="section">
-          <h3>Experience</h3>
-          <p>${experience}</p>
-        </div>
-        <div class="section">
-          <h3>Skills</h3>
-          <p>${skills}</p>
-        </div>
-      `;
-
-      // إنشاء PDF بنصوص واضحة وقابلة للنسخ
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
       let y = 20;
 
-      // الاسم
-      doc.setFontSize(22);
-      doc.setTextColor(46,125,50); // أخضر
-      doc.text(name, 10, y);
-      y += 15;
-
-      // البريد والهاتف
+      // Header
+      doc.setFontSize(24);
+      doc.setTextColor(46,125,50);
+      doc.text(name, 105, y, {align: "center"});
+      y += 10;
       doc.setFontSize(12);
       doc.setTextColor(0,0,0);
-      doc.text(`Email: ${email}`, 10, y);
-      y += 10;
-      doc.text(`Phone: ${phone}`, 10, y);
+      doc.text(`${email} | ${phone}`, 105, y, {align: "center"});
       y += 15;
+
+      // Divider
+      doc.setDrawColor(67,160,71);
+      doc.setLineWidth(0.8);
+      doc.line(10, y, 200, y);
+      y += 10;
 
       // Experience
       doc.setFontSize(16);
-      doc.setTextColor(67,160,71);
-      doc.text("Experience", 10, y);
-      y += 10;
+      doc.setTextColor(43,139,56);
+      doc.text("Experience", 14, y);
+      y += 8;
       doc.setFontSize(12);
       doc.setTextColor(0,0,0);
-      doc.text(experience, 10, y, { maxWidth: 180 });
+      doc.text(experience, 14, y, { maxWidth: 180 });
       y += 30;
 
       // Skills
       doc.setFontSize(16);
-      doc.setTextColor(67,160,71);
-      doc.text("Skills", 10, y);
-      y += 10;
+      doc.setTextColor(43,139,56);
+      doc.text("Skills", 14, y);
+      y += 8;
       doc.setFontSize(12);
       doc.setTextColor(0,0,0);
-      doc.text(skills, 10, y, { maxWidth: 180 });
+      doc.text(skills, 14, y, { maxWidth: 180 });
+      y += 30;
 
-      // حفظ PDF
       doc.save(`${name}_CV.pdf`);
     }
   </script>
