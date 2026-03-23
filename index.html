@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Professional CV Builder</title>
+  <title>Professional CV Builder with Photo</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -30,6 +30,10 @@
       font-size: 14px;
     }
 
+    input[type="file"] {
+      padding: 6px;
+    }
+
     button {
       width: 100%;
       padding: 14px;
@@ -47,13 +51,13 @@
       opacity: 0.9;
     }
   </style>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <div id="builder">
     <h1 style="text-align:center; color:#2e7d32;">Professional CV Builder</h1>
 
+    <input type="file" id="photo" accept="image/*">
     <input type="text" id="name" placeholder="Your Name">
     <input type="email" id="email" placeholder="Your Email">
     <input type="text" id="phone" placeholder="Your Phone">
@@ -67,6 +71,7 @@
     function generatePDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
+      let y = 20;
 
       const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
@@ -74,9 +79,28 @@
       const experience = document.getElementById('experience').value;
       const skills = document.getElementById('skills').value;
 
+      const photoInput = document.getElementById('photo');
+      let imgData = null;
+      if(photoInput.files && photoInput.files[0]){
+        const reader = new FileReader();
+        reader.onload = function(e){
+          imgData = e.target.result;
+
+          // Draw photo if exists
+          doc.addImage(imgData, 'PNG', 150, 10, 40, 40);
+
+          drawCV(doc, name, email, phone, experience, skills);
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+      } else {
+        drawCV(doc, name, email, phone, experience, skills);
+      }
+    }
+
+    function drawCV(doc, name, email, phone, experience, skills){
       let y = 20;
 
-      // Header
+      // Header Name & Contact
       doc.setFontSize(24);
       doc.setTextColor(46,125,50);
       doc.text(name, 105, y, {align: "center"});
@@ -92,27 +116,26 @@
       doc.line(10, y, 200, y);
       y += 10;
 
-      // Experience section with light background
-      doc.setFillColor(241,248,233); // light green background
+      // Experience section
+      doc.setFillColor(241,248,233);
+      doc.rect(10, y, 190, 35, 'F');
+      doc.setFontSize(16);
+      doc.setTextColor(43,139,56);
+      doc.text("Experience", 14, y + 10);
+      doc.setFontSize(12);
+      doc.setTextColor(0,0,0);
+      doc.text(experience, 14, y + 20, { maxWidth: 180 });
+      y += 45;
+
+      // Skills section
+      doc.setFillColor(241,248,233);
       doc.rect(10, y, 190, 30, 'F');
       doc.setFontSize(16);
       doc.setTextColor(43,139,56);
-      doc.text("Experience", 14, y + 8);
+      doc.text("Skills", 14, y + 10);
       doc.setFontSize(12);
       doc.setTextColor(0,0,0);
-      doc.text(experience, 14, y + 16, { maxWidth: 180 });
-      y += 40;
-
-      // Skills section with light background
-      doc.setFillColor(241,248,233);
-      doc.rect(10, y, 190, 25, 'F');
-      doc.setFontSize(16);
-      doc.setTextColor(43,139,56);
-      doc.text("Skills", 14, y + 8);
-      doc.setFontSize(12);
-      doc.setTextColor(0,0,0);
-      doc.text(skills, 14, y + 16, { maxWidth: 180 });
-      y += 35;
+      doc.text(skills, 14, y + 20, { maxWidth: 180 });
 
       doc.save(`${name}_CV.pdf`);
     }
