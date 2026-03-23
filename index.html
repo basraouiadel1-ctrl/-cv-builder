@@ -4,60 +4,89 @@
   <meta charset="UTF-8">
   <title>CV Builder</title>
   <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      background: #e0f2f1; 
-      padding: 40px; 
-      display: flex; 
-      justify-content: center; 
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #e8f5e9);
+      display: flex;
+      justify-content: center;
+      padding: 50px 20px;
     }
+
     #builder {
-      width: 400px;
+      width: 500px;
     }
+
     input, textarea {
-      display: block; 
-      margin: 10px 0; 
-      width: 100%; 
-      padding: 10px; 
-      border-radius: 5px; 
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      font-size: 14px;
+      font-size: 15px;
     }
+
     button {
-      padding: 12px 20px;
-      background: linear-gradient(90deg, #43a047, #66bb6a);
-      color: white; 
-      border: none; 
-      border-radius: 5px;
-      cursor: pointer;
+      width: 100%;
+      padding: 14px;
       font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #43a047, #66bb6a);
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
       margin-top: 10px;
     }
+
     button:hover {
       opacity: 0.9;
+      transform: scale(1.02);
     }
+
     #cv {
-      background: white; 
-      padding: 20px; 
-      margin-top: 20px; 
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-      border-radius: 10px;
+      background: white;
+      padding: 25px;
+      margin-top: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      border-radius: 12px;
     }
-    h2, h3 {
+
+    h2 {
       color: #2e7d32;
       margin-bottom: 5px;
+      border-bottom: 2px solid #43a047;
+      padding-bottom: 5px;
     }
-    p { margin: 5px 0; }
+
+    h3 {
+      color: #43a047;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      border-bottom: 1px solid #a5d6a7;
+      padding-bottom: 3px;
+    }
+
+    p {
+      margin: 6px 0;
+      line-height: 1.5;
+    }
+
+    .section {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f1f8e9;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
   <div id="builder">
-    <h1>CV Builder</h1>
+    <h1 style="text-align:center; color:#2e7d32;">CV Builder</h1>
 
     <input type="text" id="name" placeholder="Your Name">
     <input type="email" id="email" placeholder="Your Email">
     <input type="text" id="phone" placeholder="Your Phone">
-
     <textarea id="experience" placeholder="Your Experience"></textarea>
     <textarea id="skills" placeholder="Your Skills"></textarea>
 
@@ -78,10 +107,14 @@
         <h2>${name}</h2>
         <p><b>Email:</b> ${email}</p>
         <p><b>Phone:</b> ${phone}</p>
-        <h3>Experience</h3>
-        <p>${experience}</p>
-        <h3>Skills</h3>
-        <p>${skills}</p>
+        <div class="section">
+          <h3>Experience</h3>
+          <p>${experience}</p>
+        </div>
+        <div class="section">
+          <h3>Skills</h3>
+          <p>${skills}</p>
+        </div>
       `;
     }
   </script>
