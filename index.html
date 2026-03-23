@@ -1,144 +1,135 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Professional CV Builder with Photo</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #e8f5e9;
-      display: flex;
-      justify-content: center;
-      padding: 50px 20px;
-    }
-
-    #builder {
-      width: 600px;
-      background: #ffffff;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-    }
-
-    input, textarea {
-      display: block;
-      width: 100%;
-      margin: 12px 0;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-    }
-
-    input[type="file"] {
-      padding: 6px;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #43a047, #66bb6a);
-      color: white;
-      cursor: pointer;
-      margin-top: 12px;
-    }
-
-    button:hover {
-      transform: scale(1.03);
-      opacity: 0.9;
-    }
-  </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<meta charset="UTF-8">
+<title>Professional CV Builder Advanced</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #e0f2f1;
+    display: flex;
+    justify-content: center;
+    padding: 50px 20px;
+  }
+  #builder {
+    width: 650px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  }
+  input, textarea, button {
+    display: block;
+    width: 100%;
+    margin: 12px 0;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+  input, textarea {
+    border: 1px solid #ccc;
+  }
+  input:focus, textarea:focus {
+    border-color: #43a047;
+    box-shadow: 0 0 5px rgba(67,160,71,0.5);
+    outline: none;
+  }
+  button {
+    background: linear-gradient(90deg,#43a047,#66bb6a);
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.3s;
+  }
+  button:hover {
+    transform: scale(1.03);
+    opacity: 0.9;
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div id="builder">
-    <h1 style="text-align:center; color:#2e7d32;">Professional CV Builder</h1>
+<div id="builder">
+  <h1 style="text-align:center;color:#2e7d32;">Advanced CV Builder</h1>
+  <input type="file" id="photo" accept="image/*">
+  <input type="text" id="name" placeholder="Your Name">
+  <input type="email" id="email" placeholder="Your Email">
+  <input type="text" id="phone" placeholder="Your Phone">
+  <textarea id="experience" placeholder="Your Experience"></textarea>
+  <textarea id="skills" placeholder="Your Skills"></textarea>
+  <button onclick="generatePDF()">Generate & Download PDF</button>
+</div>
 
-    <input type="file" id="photo" accept="image/*">
-    <input type="text" id="name" placeholder="Your Name">
-    <input type="email" id="email" placeholder="Your Email">
-    <input type="text" id="phone" placeholder="Your Phone">
-    <textarea id="experience" placeholder="Your Experience"></textarea>
-    <textarea id="skills" placeholder="Your Skills"></textarea>
+<script>
+function generatePDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'pt', format:'a4'});
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const experience = document.getElementById('experience').value;
+  const skills = document.getElementById('skills').value;
+  const photoInput = document.getElementById('photo');
 
-    <button onclick="generatePDF()">Generate & Download PDF</button>
-  </div>
+  let y = 40;
 
-  <script>
-    function generatePDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      let y = 20;
-
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-      const phone = document.getElementById('phone').value;
-      const experience = document.getElementById('experience').value;
-      const skills = document.getElementById('skills').value;
-
-      const photoInput = document.getElementById('photo');
-      let imgData = null;
-      if(photoInput.files && photoInput.files[0]){
-        const reader = new FileReader();
-        reader.onload = function(e){
-          imgData = e.target.result;
-
-          // Draw photo if exists
-          doc.addImage(imgData, 'PNG', 150, 10, 40, 40);
-
-          drawCV(doc, name, email, phone, experience, skills);
-        };
-        reader.readAsDataURL(photoInput.files[0]);
-      } else {
-        drawCV(doc, name, email, phone, experience, skills);
-      }
+  function drawCV(imgData=null){
+    // Header
+    if(imgData){
+      doc.addImage(imgData,'PNG',450,30,80,80);
     }
+    doc.setFontSize(26);
+    doc.setTextColor(46,125,50);
+    doc.text(name, 40, y);
+    y += 20;
+    doc.setFontSize(12);
+    doc.setTextColor(0,0,0);
+    doc.text(`${email} | ${phone}`,40,y);
+    y += 25;
 
-    function drawCV(doc, name, email, phone, experience, skills){
-      let y = 20;
+    // Divider
+    doc.setDrawColor(67,160,71);
+    doc.setLineWidth(1);
+    doc.line(30, y, 570, y);
+    y += 20;
 
-      // Header Name & Contact
-      doc.setFontSize(24);
-      doc.setTextColor(46,125,50);
-      doc.text(name, 105, y, {align: "center"});
-      y += 10;
-      doc.setFontSize(12);
-      doc.setTextColor(0,0,0);
-      doc.text(`${email} | ${phone}`, 105, y, {align: "center"});
-      y += 15;
+    // Experience
+    doc.setFillColor(233,245,233);
+    doc.rect(30,y,540,100,'F');
+    doc.setFontSize(16);
+    doc.setTextColor(43,139,56);
+    doc.text("Experience",35,y+20);
+    doc.setFontSize(12);
+    doc.setTextColor(0,0,0);
+    doc.text(experience,35,y+35,{maxWidth:520});
+    y += 120;
 
-      // Divider
-      doc.setDrawColor(67,160,71);
-      doc.setLineWidth(0.8);
-      doc.line(10, y, 200, y);
-      y += 10;
+    // Skills
+    doc.setFillColor(233,245,233);
+    doc.rect(30,y,540,80,'F');
+    doc.setFontSize(16);
+    doc.setTextColor(43,139,56);
+    doc.text("Skills",35,y+20);
+    doc.setFontSize(12);
+    doc.setTextColor(0,0,0);
+    doc.text(skills,35,y+35,{maxWidth:520});
 
-      // Experience section
-      doc.setFillColor(241,248,233);
-      doc.rect(10, y, 190, 35, 'F');
-      doc.setFontSize(16);
-      doc.setTextColor(43,139,56);
-      doc.text("Experience", 14, y + 10);
-      doc.setFontSize(12);
-      doc.setTextColor(0,0,0);
-      doc.text(experience, 14, y + 20, { maxWidth: 180 });
-      y += 45;
+    doc.save(`${name}_CV.pdf`);
+  }
 
-      // Skills section
-      doc.setFillColor(241,248,233);
-      doc.rect(10, y, 190, 30, 'F');
-      doc.setFontSize(16);
-      doc.setTextColor(43,139,56);
-      doc.text("Skills", 14, y + 10);
-      doc.setFontSize(12);
-      doc.setTextColor(0,0,0);
-      doc.text(skills, 14, y + 20, { maxWidth: 180 });
-
-      doc.save(`${name}_CV.pdf`);
-    }
-  </script>
+  if(photoInput.files && photoInput.files[0]){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const imgData = e.target.result;
+      drawCV(imgData);
+    };
+    reader.readAsDataURL(photoInput.files[0]);
+  } else {
+    drawCV();
+  }
+}
+</script>
 </body>
 </html>
