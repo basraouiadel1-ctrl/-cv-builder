@@ -93,8 +93,6 @@
 
   <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- html2canvas -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
   <div id="builder">
@@ -134,18 +132,46 @@
         </div>
       `;
 
-      // تحويل HTML كامل لصورة PDF
-      const cvElement = document.getElementById('cv');
-      html2canvas(cvElement).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('p', 'pt', 'a4');
-        const imgProps = pdf.getImageProperties(imgData);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`${name}_CV.pdf`);
-      });
+      // إنشاء PDF بنصوص واضحة وقابلة للنسخ
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let y = 20;
+
+      // الاسم
+      doc.setFontSize(22);
+      doc.setTextColor(46,125,50); // أخضر
+      doc.text(name, 10, y);
+      y += 15;
+
+      // البريد والهاتف
+      doc.setFontSize(12);
+      doc.setTextColor(0,0,0);
+      doc.text(`Email: ${email}`, 10, y);
+      y += 10;
+      doc.text(`Phone: ${phone}`, 10, y);
+      y += 15;
+
+      // Experience
+      doc.setFontSize(16);
+      doc.setTextColor(67,160,71);
+      doc.text("Experience", 10, y);
+      y += 10;
+      doc.setFontSize(12);
+      doc.setTextColor(0,0,0);
+      doc.text(experience, 10, y, { maxWidth: 180 });
+      y += 30;
+
+      // Skills
+      doc.setFontSize(16);
+      doc.setTextColor(67,160,71);
+      doc.text("Skills", 10, y);
+      y += 10;
+      doc.setFontSize(12);
+      doc.setTextColor(0,0,0);
+      doc.text(skills, 10, y, { maxWidth: 180 });
+
+      // حفظ PDF
+      doc.save(`${name}_CV.pdf`);
     }
   </script>
 </body>
