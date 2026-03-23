@@ -3,26 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <title>CV Builder</title>
-  <meta name="description" content="Create and download professional CVs online">
   <style>
-    body { font-family: Arial; padding: 20px; }
-    input, textarea { display: block; margin: 10px 0; width: 100%; }
-    button { padding: 10px 20px; cursor: pointer; }
+    body { font-family: Arial; padding: 20px; background:#f5f5f5; }
+    input, textarea { display: block; margin: 10px 0; width: 100%; padding:10px; }
+    button { padding: 10px 20px; cursor: pointer; background: green; color:white; border:none; }
+    #cv { background:white; padding:20px; margin-top:20px; }
   </style>
 </head>
 <body>
-  <h1>CV Builder</h1>
-  <input type="text" id="name" placeholder="Your Name">
-  <textarea id="experience" placeholder="Your Experience"></textarea>
-  <button onclick="generateCV()">Generate CV</button>
-  <pre id="output"></pre>
 
-  <script>
-    function generateCV() {
-      const name = document.getElementById('name').value;
-      const exp = document.getElementById('experience').value;
-      document.getElementById('output').textContent = `Name: ${name}\nExperience:\n${exp}`;
-    }
-  </script>
+<h1>CV Builder</h1>
+
+<input type="text" id="name" placeholder="Your Name">
+<input type="email" id="email" placeholder="Your Email">
+<input type="text" id="phone" placeholder="Your Phone">
+
+<textarea id="experience" placeholder="Your Experience"></textarea>
+<textarea id="skills" placeholder="Your Skills"></textarea>
+
+<button onclick="generateCV()">Generate CV</button>
+
+<div id="cv"></div>
+
+<script>
+function generateCV() {
+  document.getElementById('cv').innerHTML = `
+    <h2>${name.value}</h2>
+    <p><b>Email:</b> ${email.value}</p>
+    <p><b>Phone:</b> ${phone.value}</p>
+    <h3>Experience</h3>
+    <p>${experience.value}</p>
+    <h3>Skills</h3>
+    <p>${skills.value}</p>
+  `;
+}
+</script>
+
 </body>
 </html>
