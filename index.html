@@ -79,6 +79,9 @@
       border-radius: 8px;
     }
   </style>
+
+  <!-- jsPDF library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <div id="builder">
@@ -90,19 +93,20 @@
     <textarea id="experience" placeholder="Your Experience"></textarea>
     <textarea id="skills" placeholder="Your Skills"></textarea>
 
-    <button onclick="generateCV()">Generate CV</button>
+    <button onclick="generatePDF()">Generate & Download PDF</button>
 
     <div id="cv"></div>
   </div>
 
   <script>
-    function generateCV() {
+    function generatePDF() {
       const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
       const experience = document.getElementById('experience').value;
       const skills = document.getElementById('skills').value;
 
+      // عرض CV فالموقع
       document.getElementById('cv').innerHTML = `
         <h2>${name}</h2>
         <p><b>Email:</b> ${email}</p>
@@ -116,6 +120,17 @@
           <p>${skills}</p>
         </div>
       `;
+
+      // إنشاء PDF
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(12);
+      doc.text(`Name: ${name}`, 10, 10);
+      doc.text(`Email: ${email}`, 10, 20);
+      doc.text(`Phone: ${phone}`, 10, 30);
+      doc.text(`Experience:\n${experience}`, 10, 40);
+      doc.text(`Skills:\n${skills}`, 10, 80);
+      doc.save(`${name}_CV.pdf`);
     }
   </script>
 </body>
